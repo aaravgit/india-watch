@@ -100,6 +100,7 @@ Visit `http://localhost:8000/docs` for the interactive API documentation.
 | Markets scraper | ✅ Complete |
 | Financial news | ✅ Complete |
 | Defense news | ✅ Complete |
+| WebSocket live streaming | ✅ Complete |
 | INDI-X Score | 🔨 Building |
 | GIFT Nifty tracker | 🔨 Building |
 | Budget day tracker | 🔨 Building |

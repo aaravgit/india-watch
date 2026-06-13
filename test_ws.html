@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>India Watch - WebSocket Test</title>
+    <style>
+        body { font-family: Arial; background: #1a1a1a; color: #00ff00; padding: 20px; }
+        h1 { color: #ff9500; }
+        #status { color: #ff9500; font-weight: bold; }
+        #data { white-space: pre-wrap; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>🇮🇳 India Watch — Live Feed Test</h1>
+    <p>Status: <span id="status">Connecting...</span></p>
+    <p>Messages received: <span id="count">0</span></p>
+    <hr>
+    <div id="data">Waiting for data...</div>
+
+    <script>
+        let count = 0;
+        const ws = new WebSocket("ws://localhost:8000/ws/prices");
+        
+        ws.onopen = () => {
+            document.getElementById("status").textContent = "🟢 CONNECTED";
+        };
+        
+        ws.onmessage = (event) => {
+            count++;
+            document.getElementById("count").textContent = count;
+            const data = JSON.parse(event.data);
+            document.getElementById("data").textContent = 
+                JSON.stringify(data, null, 2);
+        };
+        
+        ws.onclose = () => {
+            document.getElementById("status").textContent = "🔴 DISCONNECTED";
+        };
+    </script>
+</body>
+</html>
