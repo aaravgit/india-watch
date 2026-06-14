@@ -6,6 +6,13 @@ INDICES = {
     "SENSEX": "^BSESN",
     "BANK NIFTY": "^NSEBANK",
     "NIFTY IT": "^CNXIT",
+    "NIFTY MIDCAP": "^NSEMDCP50",
+}
+
+COMMODITIES = {
+    "Gold": "GC=F",
+    "Silver": "SI=F",
+    "Crude Oil": "CL=F",
 }
 
 STOCKS = {
@@ -17,6 +24,18 @@ STOCKS = {
     "Wipro": "WIPRO.NS",
     "Adani Ports": "ADANIPORTS.NS",
     "Bajaj Finance": "BAJFINANCE.NS",
+    "SBI": "SBIN.NS",
+    "Kotak Bank": "KOTAKBANK.NS",
+    "LT": "LT.NS",
+    "Axis Bank": "AXISBANK.NS",
+    "HUL": "HINDUNILVR.NS",
+    "Maruti": "MARUTI.NS",
+    "Tata Motors": "TATAMOTORS.NS",
+    "Sun Pharma": "SUNPHARMA.NS",
+    "ONGC": "ONGC.NS",
+    "NTPC": "NTPC.NS",
+    "HAL": "HAL.NS",
+    "Adani Enterprises": "ADANIENT.NS",
 }
 
 def get_quote(ticker_symbol: str) -> dict:
@@ -48,5 +67,11 @@ def get_all_indices() -> dict:
 def get_all_stocks() -> dict:
     result = {}
     for name, symbol in STOCKS.items():
+        result[name] = get_quote(symbol)
+    return result
+
+def get_all_commodities() -> dict:
+    result = {}
+    for name, symbol in COMMODITIES.items():
         result[name] = get_quote(symbol)
     return result

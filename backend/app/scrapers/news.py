@@ -5,9 +5,14 @@ from datetime import datetime
 NEWS_SOURCES = {
     "Economic Times Markets": "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms",
     "Economic Times Economy": "https://economictimes.indiatimes.com/economy/rssfeeds/1373380680.cms",
+    "Economic Times Finance": "https://economictimes.indiatimes.com/personal-finance/rssfeeds/944680/cms",
     "Mint Markets": "https://www.livemint.com/rss/markets",
+    "Mint Economy": "https://www.livemint.com/rss/economy",
     "PIB India": "https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3",
     "Business Standard": "https://www.business-standard.com/rss/markets-106.rss",
+    "Business Standard Economy": "https://www.business-standard.com/rss/economy-policy-10201.rss",
+    "Financial Express": "https://www.financialexpress.com/market/feed/",
+    "Moneycontrol": "https://www.moneycontrol.com/rss/latestnews.xml",
 }
 
 DEFENSE_SOURCES = {
@@ -38,10 +43,10 @@ def parse_feed(url: str, limit: int = 10) -> list:
     except Exception as e:
         return [{"error": str(e)}]
 
-def get_financial_news(limit: int = 10) -> list:
+def get_financial_news(limit: int = 50) -> list:
     all_articles = []
     for name, url in NEWS_SOURCES.items():
-        articles = parse_feed(url, limit=5)
+        articles = parse_feed(url, limit=10)
         all_articles.extend(articles)
     all_articles.sort(key=lambda x: x.get("published", ""), reverse=True)
     return all_articles[:limit]

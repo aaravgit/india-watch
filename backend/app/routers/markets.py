@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.scrapers.markets import get_all_indices, get_all_stocks, get_quote
+from app.scrapers.markets import get_all_indices, get_all_stocks, get_quote, get_all_commodities
 
 router = APIRouter(prefix="/markets", tags=["Markets"])
 
@@ -14,3 +14,7 @@ async def get_stocks():
 @router.get("/stock/{symbol}")
 async def get_single_stock(symbol: str):
     return get_quote(symbol)
+
+@router.get("/commodities")
+async def get_commodities():
+    return get_all_commodities()
