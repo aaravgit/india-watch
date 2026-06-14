@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
-from app.routers import markets, news, websocket
+from app.routers import markets, news, websocket, indix
 from app.websocket.manager import price_broadcaster
 
 @asynccontextmanager
@@ -23,6 +23,7 @@ app.add_middleware(
 app.include_router(markets.router)
 app.include_router(news.router)
 app.include_router(websocket.router)
+app.include_router(indix.router)
 
 @app.get("/")
 async def root():

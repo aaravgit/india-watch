@@ -101,7 +101,7 @@ Visit `http://localhost:8000/docs` for the interactive API documentation.
 | Financial news | ✅ Complete |
 | Defense news | ✅ Complete |
 | WebSocket live streaming | ✅ Complete |
-| INDI-X Score | 🔨 Building |
+| INDI-X Score | ✅ Complete |
 | GIFT Nifty tracker | 🔨 Building |
 | Budget day tracker | 🔨 Building |
 | Frontend dashboard | 📅 Planned |
