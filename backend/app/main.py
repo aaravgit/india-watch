@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
-from app.routers import markets, news, websocket, indix, gift_nifty
+from app.routers import markets, news, websocket, indix, gift_nifty, budget
 from app.websocket.manager import price_broadcaster
 
 @asynccontextmanager
@@ -25,6 +25,7 @@ app.include_router(news.router)
 app.include_router(websocket.router)
 app.include_router(indix.router)
 app.include_router(gift_nifty.router)
+app.include_router(budget.router)
 @app.get("/")
 async def root():
     return {"message": "India Watch API is running"}
