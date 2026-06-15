@@ -64,6 +64,8 @@ Real-time defense and geopolitical news with an interactive map showing events a
 | GET | `/news/financial` | Latest financial news |
 | GET | `/news/defense` | Defense & geopolitical news |
 | WS | `/ws/prices` | Live price WebSocket stream |
+| GET | `/premarket/gift-nifty` | GIFT Nifty pre-market signal |
+| GET | `/premarket/market-status` | Current market open/closed status |
 
 ---
 
@@ -102,7 +104,7 @@ Visit `http://localhost:8000/docs` for the interactive API documentation.
 | Defense news | ✅ Complete |
 | WebSocket live streaming | ✅ Complete |
 | INDI-X Score | ✅ Complete |
-| GIFT Nifty tracker | 🔨 Building |
+| GIFT Nifty tracker | ✅ Complete |
 | Budget day tracker | 🔨 Building |
 | Frontend dashboard | 📅 Planned |
 | Defense map | 📅 Planned |
