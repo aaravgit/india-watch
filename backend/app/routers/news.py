@@ -8,5 +8,5 @@ async def financial_news(limit: int = 100):
     return get_financial_news(limit=limit)
 
 @router.get("/defense")
-async def defense_news(limit: int = 50):
+async def defense_news(limit: int = 100):
     return get_defense_news(limit=limit)

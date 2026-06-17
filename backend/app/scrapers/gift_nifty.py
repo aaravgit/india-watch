@@ -29,20 +29,15 @@ def get_market_status() -> dict:
 
 def get_gift_nifty() -> dict:
     try:
-        # GIFT Nifty futures
-        gift = yf.Ticker("NIFTY_FUT.NS")
+        # GIFT Nifty data isn't available via yfinance (NSE IX contracts
+        # aren't on Yahoo Finance). Approximate using Nifty 50 itself.
         nifty = yf.Ticker("^NSEI")
 
         nifty_info = nifty.fast_info
         prev_close = nifty_info.previous_close
         last_price = nifty_info.last_price
 
-        try:
-            gift_info = gift.fast_info
-            gift_price = gift_info.last_price
-        except:
-            # fallback — use Nifty itself as estimate
-            gift_price = last_price
+        gift_price = last_price
 
         gap = round(gift_price - prev_close, 2)
         gap_pct = round((gap / prev_close) * 100, 2)

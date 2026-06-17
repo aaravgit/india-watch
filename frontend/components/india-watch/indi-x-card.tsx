@@ -1,9 +1,18 @@
-import { indiX } from "@/lib/market-data"
+type IndiXData = {
+  indi_x: number;
+  grade: string;
+  color: string;
+  components: {
+    momentum: number;
+    sentiment: number;
+    vix: number;
+  };
+};
 
 function ScoreRing({ score }: { score: number }) {
-  const radius = 56
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference - (score / 100) * circumference
+  const radius = 56;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
   return (
     <div className="relative flex h-40 w-40 items-center justify-center">
       <div className="absolute inset-2 rounded-full bg-positive/10 blur-xl" aria-hidden="true" />
@@ -26,7 +35,7 @@ function ScoreRing({ score }: { score: number }) {
         <span className="text-xs text-muted-foreground">/ 100</span>
       </div>
     </div>
-  )
+  );
 }
 
 function ComponentBar({ label, value }: { label: string; value: number }) {
@@ -40,10 +49,18 @@ function ComponentBar({ label, value }: { label: string; value: number }) {
         <div className="h-full rounded-full bg-primary" style={{ width: `${value}%` }} />
       </div>
     </div>
-  )
+  );
 }
 
-export function IndiXCard() {
+export function IndiXCard({ data }: { data: IndiXData | null }) {
+  if (!data) {
+    return (
+      <section id="indi-x" className="rounded-xl border border-border bg-card p-5">
+        <p className="text-sm text-muted-foreground">Loading INDI-X...</p>
+      </section>
+    );
+  }
+
   return (
     <section id="indi-x" className="rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -52,18 +69,17 @@ export function IndiXCard() {
           <p className="text-xs text-muted-foreground">Composite market health index</p>
         </div>
         <span className="rounded-full bg-positive/15 px-3 py-1 text-xs font-medium text-positive">
-          {indiX.zone}
+          {data.grade}
         </span>
       </div>
-
       <div className="flex flex-col items-center gap-6 sm:flex-row sm:gap-10">
-        <ScoreRing score={indiX.score} />
+        <ScoreRing score={data.indi_x} />
         <div className="w-full flex-1 space-y-4">
-          {indiX.components.map((c) => (
-            <ComponentBar key={c.label} label={c.label} value={c.value} />
-          ))}
+          <ComponentBar label="Momentum" value={data.components.momentum} />
+          <ComponentBar label="Sentiment" value={data.components.sentiment} />
+          <ComponentBar label="VIX" value={data.components.vix} />
         </div>
       </div>
     </section>
-  )
+  );
 }

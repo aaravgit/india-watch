@@ -1,5 +1,7 @@
 import yfinance as yf
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+import time
 
 INDICES = {
     "NIFTY 50": "^NSEI",
@@ -30,13 +32,28 @@ STOCKS = {
     "Axis Bank": "AXISBANK.NS",
     "HUL": "HINDUNILVR.NS",
     "Maruti": "MARUTI.NS",
-    "Tata Motors": "TATAMOTORS.NS",
+    "Tata Motors (CV)": "TMCV.NS",
+    "Tata Motors (PV)": "TMPV.NS",
     "Sun Pharma": "SUNPHARMA.NS",
     "ONGC": "ONGC.NS",
     "NTPC": "NTPC.NS",
     "HAL": "HAL.NS",
     "Adani Enterprises": "ADANIENT.NS",
 }
+
+# ---- simple in-memory cache ----
+_CACHE: dict = {}
+_CACHE_TTL_SECONDS = 8
+
+def _get_cached(key: str):
+    entry = _CACHE.get(key)
+    if entry and (time.time() - entry["ts"]) < _CACHE_TTL_SECONDS:
+        return entry["data"]
+    return None
+
+def _set_cached(key: str, data):
+    _CACHE[key] = {"data": data, "ts": time.time()}
+
 
 def get_quote(ticker_symbol: str) -> dict:
     try:
@@ -54,24 +71,58 @@ def get_quote(ticker_symbol: str) -> dict:
             ),
             "volume": info.three_month_average_volume,
             "timestamp": datetime.now().isoformat(),
+            "error": None,
         }
     except Exception as e:
-        return {"error": str(e)}
+        return {
+            "price": None,
+            "open": None,
+            "high": None,
+            "low": None,
+            "prev_close": None,
+            "change": None,
+            "change_pct": None,
+            "volume": None,
+            "timestamp": datetime.now().isoformat(),
+            "error": str(e),
+        }
+
+
+def _get_quotes_parallel(items: dict) -> dict:
+    """Fetch all symbols in `items` concurrently instead of one-by-one."""
+    result = {}
+    with ThreadPoolExecutor(max_workers=min(10, len(items))) as executor:
+        futures = {
+            name: executor.submit(get_quote, symbol)
+            for name, symbol in items.items()
+        }
+        for name, future in futures.items():
+            result[name] = future.result()
+    return result
+
 
 def get_all_indices() -> dict:
-    result = {}
-    for name, symbol in INDICES.items():
-        result[name] = get_quote(symbol)
+    cached = _get_cached("indices")
+    if cached is not None:
+        return cached
+    result = _get_quotes_parallel(INDICES)
+    _set_cached("indices", result)
     return result
+
 
 def get_all_stocks() -> dict:
-    result = {}
-    for name, symbol in STOCKS.items():
-        result[name] = get_quote(symbol)
+    cached = _get_cached("stocks")
+    if cached is not None:
+        return cached
+    result = _get_quotes_parallel(STOCKS)
+    _set_cached("stocks", result)
     return result
 
+
 def get_all_commodities() -> dict:
-    result = {}
-    for name, symbol in COMMODITIES.items():
-        result[name] = get_quote(symbol)
+    cached = _get_cached("commodities")
+    if cached is not None:
+        return cached
+    result = _get_quotes_parallel(COMMODITIES)
+    _set_cached("commodities", result)
     return result
