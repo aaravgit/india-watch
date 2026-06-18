@@ -24,8 +24,8 @@ export function NewsFeed({ title, items, id }: { title: string; items: NewsItem[
       <ul className="space-y-2">
         {items.map((item, i) => (
           <li key={i} className="rounded-lg border border-transparent p-3 hover:bg-secondary">
-            <div className="mb-1 flex items-center justify-between gap-2">
-              <span className="text-xs font-medium text-primary">{item.source}</span>
+            <div className="mb-1 flex flex-col gap-0.5">
+              <span className="text-xs font-medium text-primary break-words">{item.source}</span>
               <span className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" />
                 {item.published ? item.published.slice(0, 16) : ""}
