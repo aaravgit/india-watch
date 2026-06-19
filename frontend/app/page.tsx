@@ -26,17 +26,13 @@ export default function Page() {
 
   async function fetchAll() {
     try {
-      const [idx, stk, com, fn, dn, ix, gn] = await Promise.all([
-        getIndices(),
-        getStocks(),
+      const [com, fn, dn, ix, gn] = await Promise.all([
         getCommodities(),
         getFinancialNews(),
         getDefenseNews(),
         getIndix(),
         getGiftNifty(),
       ]);
-      setIndices(idx);
-      setStocks(stk);
       setCommodities(com);
       setFinancialNews(fn);
       setDefenseNews(dn);
@@ -49,10 +45,34 @@ export default function Page() {
   }
 
   useEffect(() => {
-    fetchAll();
-    const interval = setInterval(fetchAll, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  fetchAll();
+  const interval = setInterval(fetchAll, 30000);
+  return () => clearInterval(interval);
+}, []);
+
+useEffect(() => {
+  const ws = new WebSocket("ws://localhost:8000/ws/prices");
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === "price_update") {
+        setIndices(data.indices);
+        setStocks(data.stocks);
+      }
+    } catch (err) {
+      console.error("WebSocket message parse error:", err);
+    }
+  };
+
+  ws.onerror = (err) => {
+    console.error("WebSocket error:", err);
+  };
+
+  return () => {
+    ws.close();
+  };
+}, []);
 
   return (
     <div className="min-h-screen bg-background">
