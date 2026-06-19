@@ -117,7 +117,7 @@ Frontend: `http://localhost:3000`
 | Clickable stocks → price chart/history view | ⏳ Not started |
 | Live USD→INR conversion for commodities | ⏳ Not started |
 | RSS source-field cleanup | ⏳ Not started |
-| Deployment (Railway + Vercel) | ⏳ Deferred — local-only for now |
+| Deployment | ⏳ Deferred — local-only for now |
 
 ---
 
